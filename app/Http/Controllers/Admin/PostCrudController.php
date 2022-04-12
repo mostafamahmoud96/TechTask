@@ -42,10 +42,8 @@ class PostCrudController extends CrudController
     protected function setupListOperation()
     {
         // dd(backpack_user()->roles());
-        if(!backpack_user()->hasRole('Admin'))
-        {
+        if (!backpack_user()->hasRole('Admin')) {
             $this->crud->addClause('where', 'user_id', backpack_user()->id);
-
         }
 
 
@@ -54,25 +52,23 @@ class PostCrudController extends CrudController
             'label' => "slug Name", // Table column heading
             'type' => 'Text'
         ]);
-           $this->crud->addColumn([
+        $this->crud->addColumn([
             'name' => 'body', // The db column name
             'label' => "body", // Table column heading
             'type' => 'Text'
         ]);
-       $this->crud->addColumn([
+        $this->crud->addColumn([
             'name' => 'descritpion', // The db column name
             'label' => "descritpion", // Table column heading
             'type' => 'Text'
-        ]);   $this->crud->addColumn([
+        ]);
+        $this->crud->addColumn([
             'name' => 'user.name', // The db column name
             'label' => "owner of post", // Table column heading
             'type' => 'Text'
         ]);
-       $this->crud->addColumn([
-            'name' => 'status', // The db column name
-            'label' => "status", // Table column heading
-            'type' => 'Text'
-        ]);  $this->crud->addColumn([
+     
+        $this->crud->addColumn([
             'name' => 'category.name', // The db column name
             'label' => "Category", // Table column heading
             'type' => 'Text'
@@ -98,7 +94,7 @@ class PostCrudController extends CrudController
         CRUD::addFields([
             [
                 'name'  => 'slug',
-                'label' =>'Slug',
+                'label' => 'Slug',
                 'type'  => 'text',
             ],
             [
@@ -123,17 +119,34 @@ class PostCrudController extends CrudController
                     'class'      => 'form-group col-md-12 required'
                 ],
             ],
-            // [
-            // 'name' => 'status',
-            // 'label' => trans('dashboard.status_name'),
-            // 'type' => 'radio',
-            // 'options' => [
-            //     Post::STATUS_TYPE_PENDING => trans('dashboard.statuses.' . Post::STATUS_TYPE_PENDING),
-            //     Post::STATUS_TYPE_ACCEPTED => trans('dashboard.statuses.' . Post::STATUS_TYPE_ACCEPTED),
-            //     Post::STATUS_TYPE_REJECTED => trans('dashboard.statuses.' . Post::STATUS_TYPE_REJECTED),
-            // ],
-            // ]
         ]);
+
+        if (backpack_user()->hasRole('Admin')) {
+            CRUD::addFields([
+                    [
+                        'name' => 'status',
+                        'label' => "Status",
+                        'type' => 'radio',
+                        'options' => [
+                            Post::STATUS_TYPE_PENDING => trans('dashboard.statuses.' . Post::STATUS_TYPE_PENDING),
+                            Post::STATUS_TYPE_ACCEPTED => trans('dashboard.statuses.' . Post::STATUS_TYPE_ACCEPTED),
+                            Post::STATUS_TYPE_REJECTED => trans('dashboard.statuses.' . Post::STATUS_TYPE_REJECTED),
+                        ],
+                    ],
+                    [
+                        'name'      => 'user_id', // the db column for the foreign key
+                        'label'     => "User",
+                        'type'      => 'select',
+                        'model'     => "App\Models\User",
+                        'attribute' => 'name',
+                        'entity'    => 'user',
+
+                    ],
+                ]);
+
+
+
+            }
 
 
 
